@@ -7,7 +7,7 @@ namespace CspSolver.Models
         public static ModelBuilder GetModel(string puzzleString)
         {
             var model = new ModelBuilder();
-            var domain = model.CreateDomain("values", 1, 2, 3, 4);
+            var domain = model.CreateDomain(1, 2, 3, 4);
 
             var variables = new Variable[16];
             for(int i = 0; i < 16; i++)

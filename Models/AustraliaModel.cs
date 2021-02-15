@@ -11,7 +11,7 @@ namespace CspSolver.Models
         public static ModelBuilder GetModel()
         {
             var model = new ModelBuilder();
-            var domain = model.CreateDomain("colors", Red, Green, Blue);
+            var domain = model.CreateDomain(Red, Green, Blue);
             var wa = model.CreateVariable("Western Australia", domain);
             var nt = model.CreateVariable("Northern Territory", domain);
             var sa = model.CreateVariable("South Astralia", domain);

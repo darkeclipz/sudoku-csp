@@ -10,8 +10,8 @@ namespace CspSolver.Models
         public static ModelBuilder GetModel(string sudokuString = "")
         {
             var model = new ModelBuilder();
-            var domain = model.CreateDomain("values", 1, 2, 3, 4, 5, 6, 7, 8, 9);
-
+            var domain = model.CreateDomain(1, 2, 3, 4, 5, 6, 7, 8, 9);
+            
             // Create all the variable (9*9 = 81)
             var variables = new Variable[9 * 9];
             for(int i = 0; i < 9 * 9; i++)

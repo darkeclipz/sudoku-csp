@@ -13,7 +13,7 @@ namespace CspSolver.Solver
 
         // Create a new domain, which are the values that a variable
         // can be set to.
-        public Domain CreateDomain(string name, params int[] values)
+        public Domain CreateDomain(params int[] values)
         {
             var domain = new Domain();
             domain.Values.AddRange(values);
@@ -24,6 +24,11 @@ namespace CspSolver.Solver
             }
 
             return domain;
+        }
+
+        public BooleanDomain CreateBooleanDomain()
+        {
+            return new BooleanDomain();
         }
 
         // Create a new variable with a given domain.

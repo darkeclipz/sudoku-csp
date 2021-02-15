@@ -12,7 +12,7 @@ namespace CspSolver.Solver
 
         public void AddDomain(Domain domain)
         {
-            Domain = Domain.Copy(domain);
+            Domain = domain.Copy();
         }
 
         public void Assign(int value)
