@@ -8,6 +8,11 @@ namespace CspSolver.Solver
     {
         private CspModel Model;
 
+        private const int PARENT = 0;
+        private const int CHILD = 1;
+        private const int ON = 1;
+        private const int OFF = 0;
+
         public ConstraintPropagator(CspModel model)
         {
             Model = model;
@@ -99,11 +104,11 @@ namespace CspSolver.Solver
             value ^= 1;
 
             // Then we find the other variable.
-            var parent = constraint.Variables[0];
-            var child = constraint.Variables[1];
+            var parent = constraint.Variables[PARENT];
+            var child = constraint.Variables[CHILD];
             var other = variable.Id == parent.Id ? child : parent;
             
-            // And finally remove the value from the domain.
+            // And finally remove the value from the domain of the other variable.
             if(!other.IsSet && other.Domain.Values.Contains(value))
             {
                 propagation.Add(other.Id, value);
@@ -115,14 +120,14 @@ namespace CspSolver.Solver
         private void PropagateOptionalConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
         {
             // The only case that can be handled is when the child is turned on, the parent must also be turned on.
-            var parent = constraint.Variables[0];
-            var child = constraint.Variables[1];
-            if(value == 1 && variable.Id == child.Id)
+            var parent = constraint.Variables[PARENT];
+            var child = constraint.Variables[CHILD];
+            if(value == ON && variable.Id == child.Id)
             {
-                if(!parent.IsSet && parent.Domain.Values.Contains(0))
+                if(!parent.IsSet && parent.Domain.Values.Contains(OFF))
                 {
-                    propagation.Add(parent.Id, 0);
-                    parent.Domain.Values.Remove(0);
+                    propagation.Add(parent.Id, OFF);
+                    parent.Domain.Values.Remove(OFF);
                     propagation.IsValid = parent.Domain.Values.Count > 0;
                 }
             }
@@ -132,16 +137,16 @@ namespace CspSolver.Solver
         {
             // In the case that the parent is enabled, we don't know which child to enable, so let the backtracker handle that.
             // In the case a child is enabled, we can disable all the other children, because there can only be one enabled.
-            var parent = constraint.Variables[0];
-            if(variable.Id != parent.Id && value == 1)
+            var parent = constraint.Variables[PARENT];
+            if(variable.Id != parent.Id && value == ON)
             {
                 for(int i = 1; i < constraint.Variables.Length; i++)
                 {
                     var other = constraint.Variables[i];
                     if(!other.IsSet && other.Id != variable.Id && other.Domain.Values.Contains(1))
                     {
-                        propagation.Add(other.Id, 1);
-                        other.Domain.Values.Remove(1);
+                        propagation.Add(other.Id, ON);
+                        other.Domain.Values.Remove(ON);
                         if(other.Domain.Values.Count == 0)
                         {
                             propagation.IsValid = false;
@@ -150,10 +155,10 @@ namespace CspSolver.Solver
                     }
                 }
                 // In the case a child is enabled, we must also enable the parent.
-                if(!parent.IsSet && value == 1 && parent.Domain.Values.Contains(0))
+                if(!parent.IsSet && value == ON && parent.Domain.Values.Contains(OFF))
                 {
-                    propagation.Add(parent.Id, 0);
-                    parent.Domain.Values.Remove(0);
+                    propagation.Add(parent.Id, OFF);
+                    parent.Domain.Values.Remove(OFF);
                     propagation.IsValid = parent.Domain.Values.Count > 0;
                 }
             }
@@ -162,14 +167,14 @@ namespace CspSolver.Solver
         private void PropagateRequiredConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
         {
             // If the parent is enabled then the child must also be enabled.
-            var parent = constraint.Variables[0];
-            var child = constraint.Variables[1];
-            if(variable.Id == parent.Id && value == 1)
+            var parent = constraint.Variables[PARENT];
+            var child = constraint.Variables[CHILD];
+            if(variable.Id == parent.Id && value == ON)
             {
-                if(!child.IsSet && child.Domain.Values.Contains(0))
+                if(!child.IsSet && child.Domain.Values.Contains(OFF))
                 {
-                    propagation.Add(child.Id, 0);
-                    child.Domain.Values.Remove(0);
+                    propagation.Add(child.Id, OFF);
+                    child.Domain.Values.Remove(OFF);
                     propagation.IsValid = child.Domain.Values.Count > 0;
                 }
             }
@@ -178,14 +183,14 @@ namespace CspSolver.Solver
         private void PropagateExcludeConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
         {
             // In this case, if a variable is enabled then we must disable the other variable.
-            var parent = constraint.Variables[0];
-            var child = constraint.Variables[1];
+            var parent = constraint.Variables[PARENT];
+            var child = constraint.Variables[CHILD];
             var other = variable.Id == parent.Id ? child : parent;
 
-            if(!other.IsSet && value == 1 && other.Domain.Values.Contains(1))
+            if(!other.IsSet && value == ON && other.Domain.Values.Contains(ON))
             {
-                propagation.Add(other.Id, 1);
-                other.Domain.Values.Remove(1);
+                propagation.Add(other.Id, ON);
+                other.Domain.Values.Remove(ON);
                 propagation.IsValid = other.Domain.Values.Count > 0;
             }
         }

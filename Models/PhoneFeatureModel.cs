@@ -29,10 +29,13 @@ namespace CspSolver.Models
             builder.CreateExcludeConstraint(gps, basicScreen);
             builder.CreateRequiredConstraint(camera, highResolutionScreen);
 
-            mobilePhone.Assign(1);
-            // camera.Assign(1);
-            gps.Assign(1);
-            basicScreen.Assign(1);
+            const int ON = 1;
+            const int OFF = 0;
+
+            mobilePhone.Assign(ON);
+            gps.Assign(ON);
+            mp3.Assign(ON);
+            highResolutionScreen.Assign(OFF);
 
             return builder;
         }
