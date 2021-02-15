@@ -33,9 +33,9 @@ namespace CspSolver.Models
             const int OFF = 0;
 
             mobilePhone.Assign(ON);
-            gps.Assign(ON);
-            mp3.Assign(ON);
-            highResolutionScreen.Assign(OFF);
+            //gps.Assign(ON);
+            //mp3.Assign(ON);
+            //highResolutionScreen.Assign(OFF);
 
             return builder;
         }

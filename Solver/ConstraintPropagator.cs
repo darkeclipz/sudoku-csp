@@ -18,8 +18,7 @@ namespace CspSolver.Solver
             Model = model;
         }
 
-        // Forward propagation of the assigned value. The value will be removed
-        // from all the domains of the other variables which are shared by the same constraint.
+        // Forward propagation of the assigned value, based on the type of constraint.
         public Propagation PropagateAssignment(Variable variable, int value)
         {
             var propagation = new Propagation();
@@ -46,7 +45,7 @@ namespace CspSolver.Solver
                             PropagateAlternativeConstraint(variable, value, constraint, ref propagation);
                             break;
                         case OrConstraint:
-                            // This constraint doesn't have a defined propagation.
+                            PropagateOrConstraint(variable, value, constraint, ref propagation);
                             break;
                         case RequiredConstraint:
                             PropagateRequiredConstraint(variable, value, constraint, ref propagation);
@@ -154,6 +153,23 @@ namespace CspSolver.Solver
                         }
                     }
                 }
+                // In the case a child is enabled, we must also enable the parent.
+                if(!parent.IsSet && value == ON && parent.Domain.Values.Contains(OFF))
+                {
+                    propagation.Add(parent.Id, OFF);
+                    parent.Domain.Values.Remove(OFF);
+                    propagation.IsValid = parent.Domain.Values.Count > 0;
+                }
+            }
+        }
+
+        private void PropagateOrConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // In the case that the parent is enabled, we don't know which child to enable, so let the backtracker handle that.
+            // In the case a child is enabled, we can disable the parent.
+            var parent = constraint.Variables[PARENT];
+            if(variable.Id != parent.Id && value == ON)
+            {
                 // In the case a child is enabled, we must also enable the parent.
                 if(!parent.IsSet && value == ON && parent.Domain.Values.Contains(OFF))
                 {
