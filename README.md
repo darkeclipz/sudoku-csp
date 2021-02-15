@@ -44,15 +44,17 @@ If we assign a value to a variable, we know that any cell in that row/column/squ
 
 The algorithm uses a `ConstraintPropagator` which will propagate the value after a variable is set. The propagator will return a `Propagation` object with information of which values have been removed (`Reduction`) from the domains of other variables. This is required, because if we unset the value of the variable, we also need to restore the domains which we have reduced.
 
+Another thing that I'd like to mention, is that in a backtracking algorithm without forward propagation, it is important to check if the solution is partially satisfied after assigning a value to a variable. However, because the forward propagation ensures that values in the domain are all valid assignments, checking for partial satisfaction is no longer required.
+
 ### Variable order heuristic
 
-To pick the variable which is going to be set, a heuristic is used which will return the variable least amount of values in its domain, this is also called the minimum remaining values heuristic (MRV). This will ensure that the algorithm fails fast, and the search space is reduced quickly.
+To pick the variable which is going to be set, a heuristic is used which will return the variable with the least amount of values in its domain, this is also called the minimum remaining values heuristic (MRV). This will ensure that the algorithm fails fast, and the search space is reduced quickly.
 
 Some Sudoku's can be solved with only forward propagation. If we propagate a value, and a variable will be left with only one value in the domain, we could already set this value. However, this assignment then needs another propagation step, because a new value is set. Instead of assigning all the variables which just have a single value remaining in the domain, the recursive backtracking algorithm will do this step. This seemed the easiest choice. Because of the MRV heuristic, this variable will already be assigned immediately, giving the same effect as doing this in the forward propagation algorithm.
 
 ### Value order heuristic
 
-Another common heuristic is to select the ordering of the values based on how many cells it will propagate to. In this case the value with the most propagation will be picked, because this gives more flexibility to the algorithm later on. I however, found that it increases the runtime, and even worse, it took the algorithm more assignments to solve the CSP. Instead of this, the values are picked in lexicographical order. The solver has an option available to change this heuristic.
+Another common heuristic is to select the ordering of the values based on how many cells it will propagate to. In this case the value with the most propagated values will be picked. This gives more flexibility to the algorithm later on. However, I found that it increases the runtime, and even worse, it took the algorithm more assignments to solve the CSP. Instead of this, the values are picked in lexicographical order. The solver has an option available to change this heuristic.
 
 ## The hardest Sudoku
 
@@ -92,12 +94,12 @@ Time elapsed: 00:00:00.0279840 sec.
 
 ## Usage example with map coloring problem
 
-The algorithm will solve any CSP model with only `AllDiff` constraints rather efficiently. It could be used for the N-Queens problem, and also for the map coloring problem.
+The algorithm will solve any CSP model with only `AllDiff` constraints rather efficiently. It could be used for the N-queens problem, and also for the map coloring problem.
 
 The example code below shows how to construct the map coloring problem.
 
 ```cs
-var model = new ModelBuilder();
+var builder = new ModelBuilder();
 var domain = model.CreateDomain("colors", Red, Green, Blue);
 var wa = model.CreateVariable("Western Australia", domain);
 var nt = model.CreateVariable("Northern Territory", domain);
@@ -105,14 +107,15 @@ var sa = model.CreateVariable("South Astralia", domain);
 var qe = model.CreateVariable("Queensland", domain);
 var nsw = model.CreateVariable("New South Wales", domain);
 var vi = model.CreateVariable("Victoria", domain);
-model.CreateAllDifferentConstraint(wa, nt);
-model.CreateAllDifferentConstraint(wa, sa);
-model.CreateAllDifferentConstraint(nt, sa);
-model.CreateAllDifferentConstraint(nt, qe);
-model.CreateAllDifferentConstraint(sa, qe);
-model.CreateAllDifferentConstraint(sa, nsw);
-model.CreateAllDifferentConstraint(sa, vi);
-model.CreateAllDifferentConstraint(nsw, vi);
+builder.CreateAllDifferentConstraint(wa, nt);
+builder.CreateAllDifferentConstraint(wa, sa);
+builder.CreateAllDifferentConstraint(nt, sa);
+builder.CreateAllDifferentConstraint(nt, qe);
+builder.CreateAllDifferentConstraint(sa, qe);
+builder.CreateAllDifferentConstraint(sa, nsw);
+builder.CreateAllDifferentConstraint(sa, vi);
+builder.CreateAllDifferentConstraint(nsw, vi);
+var model = builder.BuildCspModel();
 ```
 
 The algorithm will solve this problem with just 6 assignments.
@@ -135,6 +138,6 @@ New South Wales {1} = 0 (Set: True)
 Victoria {} = 1 (Set: True)
 
 State: Satisfied
-Assigments: 6
+Assignments: 6
 Time elapsed: 00:00:00.0029048 sec.
 ```
