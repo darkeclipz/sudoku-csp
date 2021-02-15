@@ -36,6 +36,8 @@ function Search
         unassign the value from V (backtracking step)
 ```
 
+This is the gist of the algorithm. The next sections will explain a few adjustments that have been made to this to increase the speed of the solver.
+
 ### Forward propagation
 
 If we assign a value to a variable, we know that any cell in that row/column/square can't use this value anymore. Using this, we can remove this value from all the other variable domains that share the same constraint. If it happens that a domain becomes empty, we know that we have an infeasible solution, and we can backtrack early. This entire proces is known as forward propagation.
