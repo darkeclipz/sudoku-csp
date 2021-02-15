@@ -8,9 +8,9 @@ namespace CspSolver.Models
         static int Green = 1;
         static int Blue = 2;
 
-        public static Model GetModel()
+        public static ModelBuilder GetModel()
         {
-            var model = new Model();
+            var model = new ModelBuilder();
             var domain = model.CreateDomain("colors", Red, Green, Blue);
             var wa = model.CreateVariable("Western Australia", domain);
             var nt = model.CreateVariable("Northern Territory", domain);

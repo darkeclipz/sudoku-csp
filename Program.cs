@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CspSolver.Models;
 using CspSolver.Solver;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -14,39 +15,36 @@ namespace CspSolver
     {
         public static void Main(string[] args)
         {
-            // var model = Models.Sudoku4x4.GetModel("341..2....2..143");
-            var model = Models.Sudoku4x4.GetModel("..1..2....2..1..");
-            //var model = Models.SudokuModel.GetModel(".3.9..7......5.3.91...78.24.4.5.2.......4....57.8132.....7.18.2......4.7.....5.1.");
-            Console.WriteLine("-- Unsolved --");
+            // var builder = Models.Sudoku4x4.GetModel("341..2....2..143");
+            // var builder = Models.Sudoku4x4.GetModel("..1..2....2..1..");
+            // var builder = Models.SudokuModel.GetModel(".8.4..6............4.6...1.6.35...41......7....8....35.6..8..7....3.54.6.2..1..8.");
+            // var builder = Models.SudokuModel.GetModel("800000000003600000070090200050007000000045700000100030001000068008500010090000400");
+            // var builder = Models.SudokuModel.GetModel("");
+            var builder = Models.AustraliaModel.GetModel();
+
+            var model = builder.BuildCspModel();
+
+            Console.WriteLine("--- Model ---");
+            //SudokuModel.PrintBoard(model);
             PrintModel(model);
 
-            var solver = new BacktrackSolver(model);
+            var solver = new BacktrackSearcher(model);
 
-            Console.WriteLine("-- Pruned --");
-            solver.Propagate();
+            Console.WriteLine("--- Solution ---");
+            var state = solver.Solve();
+            //SudokuModel.PrintBoard(model);
             PrintModel(model);
-
-            Console.WriteLine("--- Solved for consistency ---");      
-            solver.MakeArcConsistent();
-            PrintModel(model);
-
-            Console.WriteLine("-- Solver --");
-            var isSolved = solver.Solve();
-
-            Console.WriteLine("-- Solved --");
-            PrintModel(model);
-
-            Console.WriteLine($"Is Solved: {isSolved}");
+            Console.WriteLine($"State: {Enum.GetName(typeof(SearchState), state)}");
+            solver.Statistics.Print();
             Console.ReadKey();
         }
 
-        public static void PrintModel(Model model)
+        public static void PrintModel(CspModel model)
         {
-            Console.WriteLine("Model:");
             foreach(var variable in model.Variables)
             {
-                Console.WriteLine($"{variable.Value.Name} {{{string.Join(", ", variable.Value.Domain.Values)}}}"
-                    + $" = {variable.Value.Value} (Set: {variable.Value.IsSet})");
+                Console.WriteLine($"{variable.Name} {{{string.Join(", ", variable.Domain.Values)}}}"
+                    + $" = {variable.Value} (Set: {variable.IsSet})");
             }
         }
     }

@@ -6,36 +6,47 @@ namespace CspSolver.Solver
     public abstract class Constraint
     {
         public Guid Id = Guid.NewGuid();
-        public Guid[] VariableKeys;
+        public Variable[] Variables;
 
-        public abstract bool IsSatisfied(Model model);
-        public bool VariablesSet(Model model)
+        public abstract bool IsSatisfied(CspModel model);
+        public bool VariablesSet(CspModel model)
         {
-            for(int i = 0; i < VariableKeys.Length; i++)
+            for(int i = 0; i < Variables.Length; i++)
             {
-                if(!model.Variables[VariableKeys[i]].IsSet)
+                var id = Variables[i].Id;
+                if(!model.Variables[id].IsSet)
                 {
                     return false;
                 }
             }
             return true;
         }
+        public bool ContainsVariable(int variable)
+        {
+            for(int i = 0; i < Variables.Length; i++)
+            {
+                if(Variables[i].Id == variable)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
     }
 
     public class AllDifferentConstraint : Constraint 
     {
-        public AllDifferentConstraint(params Guid[] variableKeys)
+        public AllDifferentConstraint(params Variable[] variables)
         {
-            VariableKeys = variableKeys;
+            Variables = variables;
         }
 
-        public override bool IsSatisfied(Model model)
+        public override bool IsSatisfied(CspModel model)
         {
             var values = new Dictionary<int, bool>();
-            for(int i = 0; i < VariableKeys.Length; i++)
+            for(int i = 0; i < Variables.Length; i++)
             {
-                Guid guid = VariableKeys[i];
-                Variable variable = model.Variables[guid];
+                Variable variable = model.Variables[i];
                 if(values.ContainsKey(variable.Value))
                 {
                     return false;

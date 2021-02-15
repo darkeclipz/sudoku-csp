@@ -4,9 +4,9 @@ namespace CspSolver.Models
 {
     public class Sudoku4x4
     {
-        public static Model GetModel(string puzzleString)
+        public static ModelBuilder GetModel(string puzzleString)
         {
-            var model = new Model();
+            var model = new ModelBuilder();
             var domain = model.CreateDomain("values", 1, 2, 3, 4);
 
             var variables = new Variable[16];

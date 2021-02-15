@@ -4,7 +4,7 @@ namespace CspSolver.Solver
 {
     public class Variable
     {
-        public Guid Id;
+        public int Id;
         public string Name;
         public Domain Domain;
         public int Value;
