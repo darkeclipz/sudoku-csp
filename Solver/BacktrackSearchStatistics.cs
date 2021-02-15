@@ -11,7 +11,7 @@ namespace CspSolver.Solver
 
         public void Print()
         {
-            Console.WriteLine($"Assigments: {TotalAssigments}");
+            Console.WriteLine($"Assignments: {TotalAssigments}");
             Console.WriteLine($"Time elapsed: {Stopwatch.Elapsed} sec.");
         }
 

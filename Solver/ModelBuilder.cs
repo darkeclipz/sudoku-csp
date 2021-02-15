@@ -53,6 +53,48 @@ namespace CspSolver.Solver
             return constraint;
         }
 
+        public Constraint CreateMandatoryConstraint(Variable parent, Variable child)
+        {
+            var constraint = new MandatoryConstraint(parent, child);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+
+        public Constraint CreateOptionalConstraint(Variable parent, Variable child)
+        {
+            var constraint = new OptionalConstraint(parent, child);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+
+        public Constraint CreateAlternativeConstraint(Variable parent, params Variable[] children)
+        {
+            var constraint = new AlternativeConstraint(parent, children);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+
+        public Constraint CreateOrConstraint(Variable parent, params Variable[] children)
+        {
+            var constraint = new OrConstraint(parent, children);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+        
+        public Constraint CreateRequiredConstraint(Variable parent, Variable child)
+        {
+            var constraint = new RequiredConstraint(parent, child);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+
+        public Constraint CreateExcludeConstraint(Variable parent, Variable child)
+        {
+            var constraint = new ExcludeConstraint(parent, child);
+            Constraints.Add(constraint);
+            return constraint;
+        }
+
         public CspModel BuildCspModel()
         {
             var model = new CspModel

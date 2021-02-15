@@ -31,6 +31,24 @@ namespace CspSolver.Solver
                         case AllDifferentConstraint:
                             PropagateAllDifferentConstraint(variable, value, constraint, ref propagation);
                             break;
+                        case MandatoryConstraint:
+                            PropagateMandatoryConstraint(variable, value, constraint, ref propagation);
+                            break;
+                        case OptionalConstraint:
+                            PropagateOptionalConstraint(variable, value, constraint, ref propagation);
+                            break;
+                        case AlternativeConstraint:
+                            PropagateAlternativeConstraint(variable, value, constraint, ref propagation);
+                            break;
+                        case OrConstraint:
+                            // This constraint doesn't have a defined propagation.
+                            break;
+                        case RequiredConstraint:
+                            PropagateRequiredConstraint(variable, value, constraint, ref propagation);
+                            break;
+                        case ExcludeConstraint:
+                            PropagateExcludeConstraint(variable, value, constraint, ref propagation);
+                            break;
                         default:
                             Debug.WriteLine($"Constraint of type '{constraint.GetType().Name}' does not support constraint propagation.");
                             break;
@@ -70,6 +88,105 @@ namespace CspSolver.Solver
                         return;
                     }
                 }
+            }
+        }
+
+        private void PropagateMandatoryConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // In the case of a mandatory, if a variable is enabled, we also want to enable the other
+            // variable. This means that if the variable is enabled, we need to remove 0 from the domain of the other variable.
+            // We can simply swap the on/off by taking the XOR of the value with 1.
+            value ^= 1;
+
+            // Then we find the other variable.
+            var parent = constraint.Variables[0];
+            var child = constraint.Variables[1];
+            var other = variable.Id == parent.Id ? child : parent;
+            
+            // And finally remove the value from the domain.
+            if(!other.IsSet && other.Domain.Values.Contains(value))
+            {
+                propagation.Add(other.Id, value);
+                other.Domain.Values.Remove(value);
+                propagation.IsValid = other.Domain.Values.Count > 0;
+            }
+        }
+
+        private void PropagateOptionalConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // The only case that can be handled is when the child is turned on, the parent must also be turned on.
+            var parent = constraint.Variables[0];
+            var child = constraint.Variables[1];
+            if(value == 1 && variable.Id == child.Id)
+            {
+                if(!parent.IsSet && parent.Domain.Values.Contains(0))
+                {
+                    propagation.Add(parent.Id, 0);
+                    parent.Domain.Values.Remove(0);
+                    propagation.IsValid = parent.Domain.Values.Count > 0;
+                }
+            }
+        }
+
+        private void PropagateAlternativeConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // In the case that the parent is enabled, we don't know which child to enable, so let the backtracker handle that.
+            // In the case a child is enabled, we can disable all the other children, because there can only be one enabled.
+            var parent = constraint.Variables[0];
+            if(variable.Id != parent.Id && value == 1)
+            {
+                for(int i = 1; i < constraint.Variables.Length; i++)
+                {
+                    var other = constraint.Variables[i];
+                    if(!other.IsSet && other.Id != variable.Id && other.Domain.Values.Contains(1))
+                    {
+                        propagation.Add(other.Id, 1);
+                        other.Domain.Values.Remove(1);
+                        if(other.Domain.Values.Count == 0)
+                        {
+                            propagation.IsValid = false;
+                            return;
+                        }
+                    }
+                }
+                // In the case a child is enabled, we must also enable the parent.
+                if(!parent.IsSet && value == 1 && parent.Domain.Values.Contains(0))
+                {
+                    propagation.Add(parent.Id, 0);
+                    parent.Domain.Values.Remove(0);
+                    propagation.IsValid = parent.Domain.Values.Count > 0;
+                }
+            }
+        }
+
+        private void PropagateRequiredConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // If the parent is enabled then the child must also be enabled.
+            var parent = constraint.Variables[0];
+            var child = constraint.Variables[1];
+            if(variable.Id == parent.Id && value == 1)
+            {
+                if(!child.IsSet && child.Domain.Values.Contains(0))
+                {
+                    propagation.Add(child.Id, 0);
+                    child.Domain.Values.Remove(0);
+                    propagation.IsValid = child.Domain.Values.Count > 0;
+                }
+            }
+        }
+
+        private void PropagateExcludeConstraint(Variable variable, int value, Constraint constraint, ref Propagation propagation)
+        {
+            // In this case, if a variable is enabled then we must disable the other variable.
+            var parent = constraint.Variables[0];
+            var child = constraint.Variables[1];
+            var other = variable.Id == parent.Id ? child : parent;
+
+            if(!other.IsSet && value == 1 && other.Domain.Values.Contains(1))
+            {
+                propagation.Add(other.Id, 1);
+                other.Domain.Values.Remove(1);
+                propagation.IsValid = other.Domain.Values.Count > 0;
             }
         }
 

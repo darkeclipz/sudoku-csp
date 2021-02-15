@@ -105,7 +105,7 @@ namespace CspSolver.Solver
         public override bool IsSatisfied(CspModel model)
         {
             // not allowed: parent disabled, child enabled, so 01
-            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0x01;
+            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0b01;
             // return Variables[0].Value == ON && Variables[1].Value == OFF
             //     || Variables[0].Value == ON && Variables[1].Value == ON
             //     || Variables[0].Value == OFF && Variables[1].Value == OFF;
@@ -116,6 +116,11 @@ namespace CspSolver.Solver
     {
         public AlternativeConstraint(Variable parent, params Variable[] children)
         {
+            if(!(parent.Domain is BooleanDomain))
+            {
+                throw new Exception("Parent domain must be of type BooleanDomain.");
+            }
+
             var variables = new List<Variable> { parent };
             Variables = variables.Concat(children).ToArray();
         }
@@ -158,6 +163,11 @@ namespace CspSolver.Solver
     {
         public OrConstraint(Variable parent, params Variable[] children)
         {
+            if(!(parent.Domain is BooleanDomain))
+            {
+                throw new Exception("Parent domain must be of type BooleanDomain.");
+            }
+
             var variables = new List<Variable> { parent };
             Variables = variables.Concat(children).ToArray();
         }
@@ -213,7 +223,7 @@ namespace CspSolver.Solver
             // if parent is enabled, child must be enabled   11
             // if parent is disable, child can be off/on     01 | 00 
             // value that is not allowed is                  10
-            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0x10;
+            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0b10;
         }
     }
 
@@ -238,7 +248,7 @@ namespace CspSolver.Solver
             // parent on then child off       10
             // parent off the child on/off    01 | 00 
             // value that is not allowed is   11
-            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0x11;
+            return (Variables[PARENT].Value << 1 | Variables[CHILD].Value) != 0b11;
         }
     }
 }

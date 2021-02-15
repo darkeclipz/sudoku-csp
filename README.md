@@ -141,3 +141,84 @@ State: Satisfied
 Assignments: 6
 Time elapsed: 00:00:00.0029048 sec.
 ```
+
+## Update: feature model constraints
+
+The following constraints have been added to the CSP solver.
+
+ * `MandatoryConstraint`: parent and child must either both be on or off.
+ * `OptionalConstraint`: if parent is on, child can be on or off. If the child is on, the parent must also be on.
+* `AlternativeConstraint`: if the parent is on, one and only one child must be on. If a child is one, the parent must also be on.
+* `OrConstraint`: if the parent is one, at least one child must be on. If a child is on, the parent must also be on.
+* `RequireConstrant`: if the parent is on, the child must also be on. If the parent is off, the child can be either on or off.
+* `ExcludeConstraint`: if the parent is on, the child must be off. If the child is on the parent must be off. The parent and child can not both be on.
+
+As an example, a feature model for a phone (the iconic configurator hello world) is used. 
+
+![Feature model for a phone](https://www.researchgate.net/profile/Mike_Papadakis/publication/263952669/figure/fig1/AS:296392913375233@1447676985293/A-simple-feature-model-of-a-mobile-phone-product-line-1-representing-the-features-and.png)
+
+If this example is solved without partial assigment satisfaction and forward propagation, the result is rather slow. It takes a total of 662 assignments and around 800 milliseconds to solve the model. Note that the `Mobile Phone` variable must be enabled initially, otherwise it is smart enough to know that if everything is off the constraints are also satisfied. The time is also rather long because we are printing a warning to the debug console if a constraint doesn't have a propagator implemented.
+
+```
+--- Model ---
+Mobile Phone {0, 1} = 1 (Set: True)
+Calls {0, 1} = 0 (Set: False)
+GPS {0, 1} = 0 (Set: False)
+Screen {0, 1} = 0 (Set: False)
+Basic {0, 1} = 0 (Set: False)
+Colour {0, 1} = 0 (Set: False)
+High resolution {0, 1} = 0 (Set: False)
+Media {0, 1} = 0 (Set: False)
+Camera {0, 1} = 0 (Set: False)
+MP3 {0, 1} = 0 (Set: False)
+
+--- Solution ---
+Mobile Phone {0, 1} = 1 (Set: True)
+Calls {0} = 1 (Set: True)
+GPS {1} = 0 (Set: True)
+Screen {0} = 1 (Set: True)
+Basic {1} = 0 (Set: True)
+Colour {1} = 0 (Set: True)
+High resolution {0} = 1 (Set: True)
+Media {1} = 0 (Set: True)
+Camera {1} = 0 (Set: True)
+MP3 {1} = 0 (Set: True)
+
+State: Satisfied
+Assignments: 662
+Time elapsed: 00:00:00.8104605 sec.
+```
+
+Because partial satisfaction is not implemented, forward propagation is used. After implementing forward propagation for all the different constraints, the results are much better.
+
+```
+--- Model ---
+Mobile Phone {0} = 1 (Set: True)
+Calls {0, 1} = 0 (Set: False)
+GPS {0, 1} = 0 (Set: False)
+Screen {0, 1} = 0 (Set: False)
+Basic {0, 1} = 0 (Set: False)
+Colour {0, 1} = 0 (Set: False)
+High resolution {0, 1} = 0 (Set: False)
+Media {0, 1} = 0 (Set: False)
+Camera {0, 1} = 0 (Set: False)
+MP3 {0, 1} = 0 (Set: False)
+
+--- Solution ---
+Mobile Phone {0} = 1 (Set: True)
+Calls {} = 1 (Set: True)
+GPS {1} = 0 (Set: True)
+Screen {} = 1 (Set: True)
+Basic {1} = 0 (Set: True)
+Colour {1} = 0 (Set: True)
+High resolution {0} = 1 (Set: True)
+Media {1} = 0 (Set: True)
+Camera {1} = 0 (Set: True)
+MP3 {1} = 0 (Set: True)
+
+State: Satisfied
+Assignments: 24
+Time elapsed: 00:00:00.0024186 sec.
+```
+
+In this case in only takes 24 assignments and a total of 2 milliseconds.

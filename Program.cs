@@ -18,9 +18,10 @@ namespace CspSolver
             // var builder = Models.Sudoku4x4.GetModel("341..2....2..143");
             // var builder = Models.Sudoku4x4.GetModel("..1..2....2..1..");
             // var builder = Models.SudokuModel.GetModel(".8.4..6............4.6...1.6.35...41......7....8....35.6..8..7....3.54.6.2..1..8.");
-            var builder = Models.SudokuModel.GetModel("800000000003600000070090200050007000000045700000100030001000068008500010090000400");
+            // var builder = Models.SudokuModel.GetModel("800000000003600000070090200050007000000045700000100030001000068008500010090000400");
             // var builder = Models.SudokuModel.GetModel("");
             // var builder = Models.AustraliaModel.GetModel();
+            var builder = Models.PhoneFeatureModel.GetModel();
 
             var model = builder.BuildCspModel();
 
