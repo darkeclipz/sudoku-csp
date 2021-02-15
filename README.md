@@ -6,7 +6,7 @@ This project is a constraint satisfaction problem (CSP) solver which is adjusted
 
 The Sudoku puzzle is provided as a single string consisting of 81 characters, e.g.:
 
-`.8.4..6............4.6...1.6.35...41......7....8....35.6..8..7....3.54.6.2..1..8.`.
+`.8.4..6............4.6...1.6.35...41......7....8....35.6..8..7....3.54.6.2..1..8.`
 
 It supports either `0` or `.`, or actually any other character, as the specifier for an empty field.
 
@@ -38,15 +38,15 @@ function Search
 
 ### Forward propagation
 
-If we assign a value to a variable, we can remove this value from all the other variable domains that share the same constraint. If it happens that a domain becomes empty, we know that we have an infeasible solution, and we can backtrack early.
+If we assign a value to a variable, we know that any cell in that row/column/square can't use this value anymore. Using this, we can remove this value from all the other variable domains that share the same constraint. If it happens that a domain becomes empty, we know that we have an infeasible solution, and we can backtrack early. This entire proces is known as forward propagation.
 
 The algorithm uses a `ConstraintPropagator` which will propagate the value after a variable is set. The propagator will return a `Propagation` object with information of which values have been removed (`Reduction`) from the domains of other variables. This is required, because if we unset the value of the variable, we also need to restore the domains which we have reduced.
 
 ### Variable order heuristic
 
-To pick the variable which is going to be set, a heuristic is used which will return the least amount of values, this is also called the minimum remaining values heuristic (MRV). This will ensure that the algorithm fails fast, and the search space is reduced quickly. 
+To pick the variable which is going to be set, a heuristic is used which will return the variable least amount of values in its domain, this is also called the minimum remaining values heuristic (MRV). This will ensure that the algorithm fails fast, and the search space is reduced quickly.
 
-Some Sudoku's can be solved with only foward propagation. If we propagate a value, and a variable will be left with only one value in the domain, we could already set this value. However, this assignment then needs another propagation step, because a new value is set. Instead of assigning all the variables which just have a single value remaining in the domain, the recursive backtracking algorithm will do this step. This seemed the easiest choice. Because of the MRV heuristic, this variable will already be assigned immediately, giving the same effect as doing this in the forward propagation algorithm.
+Some Sudoku's can be solved with only forward propagation. If we propagate a value, and a variable will be left with only one value in the domain, we could already set this value. However, this assignment then needs another propagation step, because a new value is set. Instead of assigning all the variables which just have a single value remaining in the domain, the recursive backtracking algorithm will do this step. This seemed the easiest choice. Because of the MRV heuristic, this variable will already be assigned immediately, giving the same effect as doing this in the forward propagation algorithm.
 
 ### Value order heuristic
 
