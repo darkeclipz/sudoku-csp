@@ -280,4 +280,55 @@ If we run this method, we will find that the solution is `24702` in around 56 mi
 ```
 Solution: 24702
 Total runtime: 00:00:00.0561051 sec.
+
+Assignments for puzzle 1: 49
+Assignments for puzzle 2: 56
+Assignments for puzzle 3: 94
+Assignments for puzzle 4: 53
+Assignments for puzzle 5: 45
+Assignments for puzzle 6: 283
+Assignments for puzzle 7: 70
+Assignments for puzzle 8: 45
+Assignments for puzzle 9: 903
+Assignments for puzzle 10: 246
+Assignments for puzzle 11: 66
+Assignments for puzzle 12: 49
+Assignments for puzzle 13: 85
+Assignments for puzzle 14: 309
+Assignments for puzzle 15: 68
+Assignments for puzzle 16: 45
+Assignments for puzzle 17: 45
+Assignments for puzzle 18: 66
+Assignments for puzzle 19: 49
+Assignments for puzzle 20: 49
+Assignments for puzzle 21: 75
+Assignments for puzzle 22: 242
+Assignments for puzzle 23: 61
+Assignments for puzzle 24: 63
+Assignments for puzzle 25: 61
+Assignments for puzzle 26: 289
+Assignments for puzzle 27: 62
+Assignments for puzzle 28: 53
+Assignments for puzzle 29: 473
+Assignments for puzzle 30: 82
+Assignments for puzzle 31: 515
+Assignments for puzzle 32: 81
+Assignments for puzzle 33: 64
+Assignments for puzzle 34: 50
+Assignments for puzzle 35: 51
+Assignments for puzzle 36: 49
+Assignments for puzzle 37: 103
+Assignments for puzzle 38: 51
+Assignments for puzzle 39: 51
+Assignments for puzzle 40: 49
+Assignments for puzzle 41: 903
+Assignments for puzzle 42: 261
+Assignments for puzzle 43: 178
+Assignments for puzzle 44: 328
+Assignments for puzzle 45: 78
+Assignments for puzzle 46: 238
+Assignments for puzzle 47: 64
+Assignments for puzzle 48: 248
+Assignments for puzzle 49: 587
+Assignments for puzzle 50: 143
 ```
