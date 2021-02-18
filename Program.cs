@@ -24,9 +24,9 @@ namespace CspSolver
             // var builder = Models.AustraliaModel.GetModel();
 
             // solve the Project Euler puzzle where we have to solve 50 puzzles.
-            // ProjectEulerSuDoku.SolveProjectEulerPuzzle();
-            // Console.ReadKey();
-            // return;
+            ProjectEulerSuDoku.SolveProjectEulerPuzzle();
+            Console.ReadKey();
+            return;
 
 
             var builder = Models.PhoneFeatureModel.GetModel();

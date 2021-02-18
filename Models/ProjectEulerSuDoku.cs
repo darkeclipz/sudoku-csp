@@ -20,6 +20,7 @@ namespace CspSolver.Models
             var threeDigitSum = 0;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            var n = 1;
             foreach(var puzzle in PuzzleIterator())
             {
                 var builder = SudokuModel.GetModel(puzzle);
@@ -30,6 +31,8 @@ namespace CspSolver.Models
                                      + model.Variables[1].Value * 10 
                                      + model.Variables[2].Value;
                 threeDigitSum += threeDigitNumber;
+
+                Console.WriteLine($"Assignments for puzzle {n++}: {solver.Statistics.TotalAssigments}");
             }
             stopwatch.Stop();
             Console.WriteLine($"Solution: {threeDigitSum}");
