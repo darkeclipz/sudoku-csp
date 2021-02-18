@@ -221,4 +221,63 @@ Assignments: 24
 Time elapsed: 00:00:00.0024186 sec.
 ```
 
-In this case in only takes 24 assignments and a total of 2 milliseconds.
+In this case it only takes 24 assignments and a total of 2 milliseconds.
+
+## Update: solving 50 Sudoku's for Project Euler
+
+[Project Euler has a problem which requires you to solve 50 Sudoku puzzles](https://projecteuler.net/problem=96), and take the sum of the first three digit number in the solution. The three digit number is the number `812` in the example below.
+
+```
+812753649
+943682175
+675491283
+154237896
+369845721
+287169534
+521974368
+438526917
+796318452
+```
+
+To do this, we will first read in the [Sudoku puzzles from a text file](https://projecteuler.net/project/resources/p096_sudoku.txt), and parse each puzzle into a single string, which is then used as input for the Sudoku model builder.
+
+```cs
+public static IEnumerable<string> PuzzleIterator()
+{
+    var lines = File.ReadAllLines("puzzles.txt");
+    for(int i = 1; i < lines.Length; i += 10)            
+        yield return string.Join("", lines[i..(i+9)]);
+}
+```
+
+We can then use this function to generate all the CSP models, and solve them. After the puzzle is found, we calculate the three digit number from the solution and add it to the total sum.
+
+```cs
+public static void SolveProjectEulerPuzzle()
+{
+    var threeDigitSum = 0;
+    var stopwatch = new Stopwatch();
+    stopwatch.Start();
+    foreach(var puzzle in PuzzleIterator())
+    {
+        var builder = SudokuModel.GetModel(puzzle);
+        var model = builder.BuildCspModel();
+        var solver = new BacktrackSearcher(model);
+        var state = solver.Solve();
+        int threeDigitNumber = model.Variables[0].Value * 100 
+                             + model.Variables[1].Value * 10 
+                             + model.Variables[2].Value;
+        threeDigitSum += threeDigitNumber;
+    }
+    stopwatch.Stop();
+    Console.WriteLine($"Solution: {threeDigitSum}");
+    Console.WriteLine($"Total runtime: {stopwatch.Elapsed} sec.");
+}
+```
+
+If we run this method, we will find that the solution is `24702` in around 56 milliseconds, not bad.
+
+```
+Solution: 24702
+Total runtime: 00:00:00.0561051 sec.
+```
