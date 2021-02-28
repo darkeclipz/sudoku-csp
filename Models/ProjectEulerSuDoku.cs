@@ -2,6 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CspSolver.Solver;
 
 namespace CspSolver.Models
@@ -17,23 +20,28 @@ namespace CspSolver.Models
 
         public static void SolveProjectEulerPuzzle()
         {
-            var threeDigitSum = 0;
             var stopwatch = new Stopwatch();
             stopwatch.Start();
+            var threeDigitSum = 0;
             var n = 1;
+            var tasks = new List<Task>();
             foreach(var puzzle in PuzzleIterator())
             {
-                var builder = SudokuModel.GetModel(puzzle);
-                var model = builder.BuildCspModel();
-                var solver = new BacktrackSearcher(model);
-                var state = solver.Solve();
-                int threeDigitNumber = model.Variables[0].Value * 100 
-                                     + model.Variables[1].Value * 10 
-                                     + model.Variables[2].Value;
-                threeDigitSum += threeDigitNumber;
-
-                Console.WriteLine($"Assignments for puzzle {n++}: {solver.Statistics.TotalAssigments}");
+                var task = Task.Run(() =>
+                {
+                    var builder = SudokuModel.GetModel(puzzle);
+                    var model = builder.BuildCspModel();
+                    var solver = new BacktrackSearcher(model);
+                    var state = solver.Solve();
+                    int threeDigitNumber = model.Variables[0].Value * 100
+                                         + model.Variables[1].Value * 10
+                                         + model.Variables[2].Value;
+                    Interlocked.Add(ref threeDigitSum, threeDigitNumber);
+                    Console.WriteLine($"Assignments for puzzle {n++}: {solver.Statistics.TotalAssigments}");
+                });
+                tasks.Add(task);
             }
+            Task.WaitAll(tasks.ToArray());
             stopwatch.Stop();
             Console.WriteLine($"Solution: {threeDigitSum}");
             Console.WriteLine($"Total runtime: {stopwatch.Elapsed} sec.");

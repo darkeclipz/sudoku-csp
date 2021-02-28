@@ -15,7 +15,7 @@ namespace CspSolver.Solver
         public ValueOrderHeuristic ValueOrder = ValueOrderHeuristic.LexicographicalOrder;
 
         private ConstraintPropagator ConstraintPropagator;
-        private int ALL_ASSIGNED = -1;
+        private const int ALL_ASSIGNED = -1;
 
         public BacktrackSearcher(CspModel model)
         {
