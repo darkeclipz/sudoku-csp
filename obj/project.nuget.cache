@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "LkYIo5y04BldbIeUPRPybru//Dcmb3TU8iUPXBMbLhYkwfGIxAev0Zfs8I1nQephdxr9rxTaPwRGnOD7r7lxag==",
+  "dgSpecHash": "I8bkB286b+ar2L6OgoRH+4+AJZ7rHcAhKoxOGF+PUHp3UYmVu0k/1NvelLifzpiXHlvDjXI31o241UpSW9JVqA==",
   "success": true,
-  "projectFilePath": "C:\\Users\\Lars\\Documents\\Repos\\CspSolver\\CspSolver.csproj",
+  "projectFilePath": "C:\\Users\\Isomorphism\\Documents\\Repos\\sudoku-csp\\CspSolver.csproj",
   "expectedPackageFiles": [],
   "logs": []
 }

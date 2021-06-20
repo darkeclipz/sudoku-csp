@@ -8,26 +8,24 @@
     "net5.0": []
   },
   "packageFolders": {
-    "C:\\Users\\Lars\\.nuget\\packages\\": {}
+    "C:\\Users\\Isomorphism\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Lars\\Documents\\Repos\\CspSolver\\CspSolver.csproj",
+      "projectUniqueName": "C:\\Users\\Isomorphism\\Documents\\Repos\\sudoku-csp\\CspSolver.csproj",
       "projectName": "CspSolver",
-      "projectPath": "C:\\Users\\Lars\\Documents\\Repos\\CspSolver\\CspSolver.csproj",
-      "packagesPath": "C:\\Users\\Lars\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Lars\\Documents\\Repos\\CspSolver\\obj\\",
+      "projectPath": "C:\\Users\\Isomorphism\\Documents\\Repos\\sudoku-csp\\CspSolver.csproj",
+      "packagesPath": "C:\\Users\\Isomorphism\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Isomorphism\\Documents\\Repos\\sudoku-csp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Lars\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\Isomorphism\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net5.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -63,7 +61,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }
