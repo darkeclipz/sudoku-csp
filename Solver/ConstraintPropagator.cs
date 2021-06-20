@@ -24,7 +24,9 @@ namespace CspSolver.Solver
             var propagation = new Propagation();
             propagation.IsValid = true;
 
-            // Check each constraint that contains the assigned variable.
+            // Check each constraint that contains the assigned variable. Can be made
+            // considerably faster by precomputing which constraint is used in which 
+            // variable, and storing this in the variable.
             for(int i = 0; i < Model.Constraints.Length; i++)
             {
                 var constraint = Model.Constraints[i];

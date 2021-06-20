@@ -68,7 +68,7 @@ namespace CspSolver.Solver
             return state;
         }
 
-        private SearchState SearchStackBasedRecursion()
+        public SearchState SearchStackBasedRecursion()
         {
             var stack = new Stack<(int, int)>();
             var dataStack = new Stack<(int, Propagation)>();
@@ -268,7 +268,7 @@ namespace CspSolver.Solver
         Satisfied
     }
 
-    // Determines in which order the variables are sovled.
+    // Determines in which order the variables are solved.
     public enum VariableOrderHeuristic
     {
         SmallestValueOrder

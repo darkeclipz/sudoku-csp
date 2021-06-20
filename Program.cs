@@ -40,7 +40,7 @@ namespace CspSolver
             var solver = new BacktrackSearcher(model);
 
             Console.WriteLine("--- Solution ---");
-            var state = solver.Solve();
+            var state = solver.SearchStackBasedRecursion();
             //SudokuModel.PrintBoard(model);
             PrintModel(model);
             Console.WriteLine($"State: {Enum.GetName(typeof(SearchState), state)}");
